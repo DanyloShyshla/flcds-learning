@@ -76,7 +76,10 @@ const FlashCardSentence = () => {
     let currentWord = currentItem.word.toLocaleLowerCase();
     let sentenceWords = currentSentence.split(" ");
     return sentenceWords.map((w) =>
-      w.toLocaleLowerCase() === currentWord || w.toLocaleLowerCase() + "ed" === currentWord ? (
+      w.toLocaleLowerCase() === currentWord ||
+      w.toLocaleLowerCase() === currentWord + "ed" ||
+      w.toLocaleLowerCase() === currentWord + "s" ||
+      w.toLocaleLowerCase() === currentWord + "ing" ? (
         <input type="text" value={inputWord} onChange={handleInput} style={{ margin: "5px" }} />
       ) : (
         w + " "

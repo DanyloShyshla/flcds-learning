@@ -76,16 +76,22 @@ function Sets() {
   };
 
   return (
-    <>
-      <Box display="flex" alignItems="center" justifyContent="space-between" px={4}>
-        <Typography variant="h6">Sets</Typography>
-        <Button variant="contained" color="primary" onClick={newSetRedirect}>
-          Add new set
-        </Button>
-      </Box>
-      {/* <Button onClick={sentenceNavigate}>Nav</Button> */}
-      <Box p={4}>{cardSets}</Box>
-    </>
+    <div>
+      {localStorage.getItem("token") ? (
+        <>
+          <Box display="flex" alignItems="center" justifyContent="space-between" px={4}>
+            <Typography variant="h6">Sets</Typography>
+            <Button variant="contained" color="primary" onClick={newSetRedirect}>
+              Add new set
+            </Button>
+          </Box>
+          {/* <Button onClick={sentenceNavigate}>Nav</Button> */}
+          <Box p={4}>{cardSets}</Box>
+        </>
+      ) : (
+        navigate("/")
+      )}
+    </div>
   );
 }
 
