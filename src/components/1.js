@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Card, TextField, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { Button, Card } from "@mui/material";
 
 const API_URL = "http://127.0.0.1:5000/api/v1/";
 
 const FlashCardSentence = () => {
-  const location = useLocation();
   const [isLearning, setIsLearning] = useState(false);
   const token = localStorage.getItem("token");
   const config = { headers: { Authorization: `Bearer ${token}` }, mode: "cors" };
@@ -22,8 +20,7 @@ const FlashCardSentence = () => {
   const [cardId, setCardId] = useState(0);
 
   const fetchItems = async () => {
-    const response = await axios.get(API_URL + `cards?set_id=${location.state.set_id}&page=1&per_page=10`, config);
-    console.log(response);
+    const response = await axios.get(API_URL + "cards?set_id=1&page=1&per_page=10", config);
     let all_items = response.data.items;
     let item = response.data.items[Math.floor(Math.random() * all_items.length)];
     setItems(all_items);
@@ -41,7 +38,7 @@ const FlashCardSentence = () => {
   const handleInput = (event) => {
     setInputWord(event.target.value);
 
-    if (event.target.value.toLocaleLowerCase() === actualWord.toLocaleLowerCase()) {
+    if (event.target.value === actualWord) {
       setDisplayColor("green");
     } else if (event.target.value === "") {
       setDisplayColor("lavender");
@@ -58,11 +55,11 @@ const FlashCardSentence = () => {
     setInputWord("");
     setTotalCards(totalCards + 1);
 
-    if (actualWord.toLocaleLowerCase() === inputWord.toLocaleLowerCase()) {
+    if (actualWord === inputWord) {
       markAsLearned();
       setScore(score + 1);
     }
-    if (totalCards === items.length - 1) {
+    if (totalCards === (items.length - 1) * 50) {
       setIsFinished(true);
     }
 
@@ -73,25 +70,13 @@ const FlashCardSentence = () => {
   };
 
   const getDisplaySentence = () => {
-    let currentWord = currentItem.word.toLocaleLowerCase();
+    let currentWord = currentItem.word;
     let sentenceWords = currentSentence.split(" ");
     return sentenceWords.map((w) =>
-      w.toLocaleLowerCase() === currentWord ||
-      w.toLocaleLowerCase() === currentWord + "ed" ||
-      w.toLocaleLowerCase() === currentWord + "s" ||
-      w.toLocaleLowerCase() === currentWord + "ing" ? (
-        <TextField
-          variant="standard"
-          size="small"
-          type="text"
-          value={inputWord}
-          onChange={handleInput}
-          style={{ margin: "5px" }}
-        />
+      w === currentWord ? (
+        <input type="text" value={inputWord} onChange={handleInput} style={{ margin: "5px" }} />
       ) : (
-        <Typography variant="overline" gutterBottom>
-          {w + " "}
-        </Typography>
+        w + " "
       )
     );
   };
@@ -118,7 +103,6 @@ const FlashCardSentence = () => {
         <Card
           variant="outlined"
           onClick={handleRightSwipe}
-          // p={4}
           style={{
             padding: "90px 50px 90px 50px",
             display: "flex",
@@ -126,7 +110,7 @@ const FlashCardSentence = () => {
             alignItems: "center",
             height: "25vh",
             width: "50vw",
-            background: "white",
+            background: "lavender",
             borderColor: displayColor,
             borderWidth: "2px",
             borderStyle: "solid",
@@ -135,9 +119,9 @@ const FlashCardSentence = () => {
           <div
             onClick={stopPropagation}
             style={{
-              // padding: "45px 45px 45px 45px",
+              padding: "45px 45px 45px 45px",
               borderRadius: "5px",
-              background: "white",
+              background: "lightblue",
             }}
           >
             {getDisplaySentence()}
